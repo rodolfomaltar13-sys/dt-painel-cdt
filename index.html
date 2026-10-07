@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Dashboard CDT Campo Grande</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark-green:#007A5A;
+    --med-green:#00A078;
+    --light-green:#E6F9F3;
+    --gold:#C8972B;
+    --red:#C0392B;
+    --text-main:#173A31;
+    --text-sub:#5C6B66;
+    --text-mute:#7C8B86;
+    --border:#E3ECE8;
+    --bg:#F5FAF8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    font-feature-settings:'tnum' 1, 'cv05' 1;
+    -webkit-font-smoothing:antialiased;
+    background:var(--bg);
+    color:var(--text-main);
+  }
+  .header{
+    background:linear-gradient(120deg, var(--dark-green), #005940);
+    padding:26px 28px 60px;
+    position:relative;
+    overflow:hidden;
+  }
+  .header .blob1{position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.06);}
+  .header .blob2{position:absolute;right:80px;bottom:-80px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.05);}
+  .header-inner{position:relative;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;}
+  .header-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .header-icon{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;}
+  .header-eyebrow span{color:rgba(255,255,255,0.75);font-size:12px;font-weight:700;letter-spacing:1px;}
+  .header h1{color:#fff;font-size:26px;font-weight:900;margin:0;letter-spacing:-0.3px;}
+  .header p{color:rgba(255,255,255,0.7);font-size:13px;margin-top:4px;font-weight:600;}
+  .meta-badge{background:rgba(255,255,255,0.1);border-radius:14px;padding:12px 18px;color:#fff;}
+  .meta-badge .label{font-size:11px;opacity:0.75;font-weight:700;margin-bottom:2px;}
+  .meta-badge .value{font-size:22px;font-weight:900;}
+
+  .nav-wrap{max-width:1200px;margin:-24px auto 0;padding:0 20px;position:relative;z-index:5;}
+  .nav{background:#fff;border-radius:16px;box-shadow:0 6px 24px rgba(0,50,35,0.12);padding:8px;display:flex;gap:4px;flex-wrap:wrap;}
+  .nav button{flex:1 1 auto;padding:11px 14px;border-radius:11px;border:none;cursor:pointer;font-size:13px;font-weight:800;transition:all .15s;background:transparent;color:var(--text-sub);font-family:inherit;}
+  .nav button.active{background:var(--dark-green);color:#fff;}
+
+  .container{max-width:1200px;margin:0 auto;padding:24px 20px 60px;}
+
+  .alert{display:flex;gap:10px;align-items:flex-start;background:#FBF6EA;border:1px solid rgba(200,151,43,0.33);border-radius:12px;padding:12px 16px;margin-bottom:22px;}
+  .alert svg{margin-top:2px;flex-shrink:0;}
+  .alert div{font-size:12.5px;color:#6B5A2A;line-height:1.5;}
+
+  .kpi-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;}
+  .ritmo-banner{display:flex;gap:12px;align-items:flex-start;border-radius:14px;padding:14px 18px;margin-bottom:18px;border:1px solid;}
+  .ritmo-banner svg{flex-shrink:0;margin-top:1px;}
+  .ritmo-text{font-size:12.5px;color:var(--text-main);line-height:1.6;}
+  .ritmo-ok{background:var(--light-green);border-color:rgba(0,160,120,0.27);color:var(--dark-green);}
+  .ritmo-atencao{background:#FBF6EA;border-color:rgba(200,151,43,0.27);color:var(--gold);}
+  .ritmo-risco{background:#FBEAE8;border-color:rgba(192,57,43,0.27);color:var(--red);}
+  .kpi{background:#fff;border-radius:16px;border:1px solid var(--border);padding:18px 20px;flex:1;min-width:200px;box-shadow:0 1px 3px rgba(0,50,35,0.05);}
+  .kpi-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+  .kpi-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;}
+  .kpi-label{font-size:12px;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.3px;}
+  .kpi-value{font-size:28px;font-weight:900;color:var(--text-main);line-height:1;}
+  .kpi-sub{font-size:12px;color:var(--text-mute);margin-top:6px;font-weight:600;}
+
+  .flex-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .card{background:#fff;border-radius:16px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,50,35,0.05);}
+
+  .gauge-card{padding:24px;display:flex;align-items:center;gap:24px;flex:1 1 340px;}
+  .gauge-title{font-size:13px;font-weight:800;color:var(--text-main);margin-bottom:6px;}
+  .gauge-desc{font-size:12px;color:var(--text-mute);line-height:1.6;}
+
+  .alerts-card{padding:22px;flex:1 1 340px;}
+  .alerts-title{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:13.5px;font-weight:800;color:var(--text-main);}
+  .alert-row{display:flex;justify-content:space-between;align-items:center;background:#FBEAE8;border-radius:10px;padding:9px 12px;margin-bottom:8px;}
+  .alert-row span:first-child{font-size:12.5px;font-weight:700;color:var(--text-main);}
+  .alert-row span:last-child{font-size:11px;font-weight:800;color:var(--red);}
+  .no-alert{font-size:12.5px;color:var(--text-mute);}
+
+  .refut-card{padding:22px;margin-top:16px;}
+  .refut-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+  .refut-title{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:800;color:var(--text-main);}
+  .refut-score{font-size:13px;font-weight:900;}
+  .refut-bar{height:10px;background:#EDF2F0;border-radius:999px;overflow:hidden;margin-bottom:18px;}
+  .refut-bar-fill{height:100%;border-radius:999px;}
+  .refut-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(200px,1fr));gap:10px;}
+  .refut-item{display:flex;justify-content:space-between;align-items:center;background:var(--light-green);border-radius:10px;padding:8px 12px;}
+  .refut-item.outros{background:#F2F5F3;}
+  .refut-name{font-size:12px;font-weight:700;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .refut-name.outros{color:var(--text-mute);}
+  .refut-count{font-size:13px;font-weight:900;color:var(--dark-green);}
+  .refut-count.outros{color:var(--text-mute);}
+  .refut-min-section{margin-top:18px;padding-top:16px;border-top:1px dashed var(--border);}
+  .refut-min-title{font-size:12.5px;font-weight:800;color:var(--text-main);margin-bottom:10px;}
+  .refut-table{width:100%;border-collapse:collapse;min-width:480px;}
+  .refut-table thead tr{border-bottom:2px solid var(--light-green);}
+  .refut-table th{text-align:left;padding:8px;font-size:10.5px;color:var(--text-mute);font-weight:800;}
+  .refut-table th.center{text-align:center;}
+  .refut-table td{padding:9px 8px;font-size:12px;color:var(--text-main);}
+  .refut-table td.center{text-align:center;}
+  .refut-table tbody tr{border-bottom:1px solid #F0F4F2;}
+  .refut-pill{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:999px;}
+  .refut-pill.ok{background:var(--light-green);color:var(--dark-green);}
+  .refut-pill.no{background:#FBEAE8;color:var(--red);}
+
+  .rules-panel{background:var(--light-green);border:1px solid rgba(0,160,120,0.2);border-radius:14px;padding:16px 20px;margin-bottom:18px;}
+  .rules-title{font-size:13px;font-weight:800;color:var(--dark-green);margin-bottom:10px;}
+  .rules-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(220px,1fr));gap:12px;}
+  .rules-item-title{font-size:11.5px;font-weight:800;color:var(--text-main);margin-bottom:3px;}
+  .rules-item-desc{font-size:12px;color:#4B5D58;line-height:1.5;}
+  .quinzena-toggle{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;align-items:center;}
+  .quinzena-toggle button{padding:8px 16px;border-radius:999px;border:1.5px solid var(--border);background:#fff;color:var(--text-sub);font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit;}
+  .quinzena-toggle button.active{border-color:var(--dark-green);background:var(--dark-green);color:#fff;}
+  .quinzena-info{margin-left:auto;font-size:12px;color:var(--text-mute);font-weight:700;}
+
+  .seller-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:16px;}
+  .seller-card{padding:18px 20px;display:flex;flex-direction:column;gap:12px;}
+  .seller-head{display:flex;align-items:center;gap:12px;}
+  .avatar{width:42px;height:42px;border-radius:12px;flex-shrink:0;background:linear-gradient(135deg,var(--dark-green),var(--med-green));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;}
+  .avatar.small{width:34px;height:34px;font-size:12px;border-radius:10px;}
+  .avatar.xsmall{width:32px;height:32px;font-size:11px;border-radius:9px;}
+  .seller-name{font-weight:800;font-size:14.5px;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .seller-sub{font-size:11px;color:var(--text-mute);margin-top:1px;}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:0.2px;white-space:nowrap;}
+  .badge.ok{background:var(--light-green);color:var(--dark-green);border:1px solid rgba(0,160,120,0.2);}
+  .badge.no{background:#FBEAE8;color:var(--red);border:1px solid rgba(192,57,43,0.2);}
+
+  .stat-row{display:flex;gap:8px;}
+  .stat-box{flex:1;border-radius:10px;padding:8px 10px;text-align:center;}
+  .stat-box .val{font-size:20px;font-weight:900;line-height:1.1;}
+  .stat-box .lbl{font-size:10px;color:var(--text-sub);font-weight:700;margin-top:2px;}
+
+  .mini-bar{margin-bottom:10px;}
+  .mini-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .mini-bar-label{font-size:11.5px;color:var(--text-sub);display:flex;align-items:center;gap:5px;font-weight:600;}
+  .mini-bar-value{font-size:12.5px;font-weight:800;}
+  .mini-bar-track{height:6px;background:#EDF2F0;border-radius:999px;overflow:hidden;position:relative;}
+  .mini-bar-fill{height:100%;border-radius:999px;transition:width .4s;}
+
+  .cashback-row{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px dashed var(--border);}
+  .cashback-left{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-sub);font-weight:600;}
+
+  .bonus-header{padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+  .bonus-header-title{font-weight:800;font-size:14px;color:var(--text-main);}
+  .bonus-header-sub{font-size:12px;color:var(--text-mute);}
+  .bonus-item{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .bonus-rank{width:22px;font-size:13px;font-weight:900;text-align:center;}
+  .bonus-track-card{flex:1;padding:14px 18px;}
+  .bonus-track-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .bonus-track-left{display:flex;align-items:center;gap:10px;}
+  .bonus-track-name{font-weight:800;font-size:13.5px;color:var(--text-main);}
+  .bonus-track-sub{font-size:11px;color:var(--text-mute);}
+  .bonus-pill{display:flex;align-items:center;gap:5px;background:#FBF6EA;color:var(--gold);font-weight:800;font-size:11.5px;padding:5px 10px;border-radius:999px;}
+  .bonus-remaining{font-size:11.5px;font-weight:700;color:var(--text-mute);}
+  .bonus-track-bar{position:relative;height:14px;background:#EDF2F0;border-radius:999px;}
+  .bonus-track-fill{height:100%;border-radius:999px;transition:width .5s ease;}
+  .bonus-flag{position:absolute;right:-2px;top:-3px;}
+
+  table{width:100%;border-collapse:collapse;min-width:900px;}
+  th{text-align:left;padding:10px 8px;font-size:11px;color:var(--text-mute);font-weight:800;}
+  th.center, td.center{text-align:center;}
+  td{padding:11px 8px;font-size:12.5px;color:var(--text-main);}
+  thead tr{border-bottom:2px solid var(--light-green);}
+  tbody tr{border-bottom:1px solid #F0F4F2;}
+  tfoot tr{border-top:2px solid var(--light-green);}
+  .delta{display:inline-flex;align-items:center;gap:2px;font-weight:800;font-size:11.5px;}
+  .table-wrap{padding:20px;overflow-x:auto;}
+
+  .pending-note{font-size:12px;color:var(--text-mute);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+  .accordion{margin-bottom:10px;overflow:hidden;}
+  .accordion-head{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:none;border:none;cursor:pointer;text-align:left;font-family:inherit;}
+  .accordion-left{display:flex;align-items:center;gap:10px;}
+  .accordion-name{font-weight:800;font-size:13.5px;color:var(--text-main);}
+  .accordion-right{display:flex;align-items:center;gap:12px;}
+  .count-pill{font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;}
+  .count-pill.red{color:var(--red);background:#FBEAE8;}
+  .count-pill.yellow{color:var(--gold);background:#FBF6EA;}
+  .chevron{transition:transform .2s;}
+  .chevron.open{transform:rotate(180deg);}
+  .accordion-body{padding:0 18px 16px;display:none;}
+  .accordion-body.open{display:block;}
+  .pending-grid-head{display:grid;grid-template-columns:1.6fr 1fr 1fr 0.9fr 0.7fr;gap:10px;padding:0 14px 6px;font-size:10.5px;font-weight:800;color:var(--text-mute);text-transform:uppercase;}
+  .pending-row{display:grid;grid-template-columns:1.6fr 1fr 1fr 0.9fr 0.7fr;gap:10px;align-items:center;padding:10px 14px;border-radius:10px;margin-bottom:6px;font-size:12.5px;}
+  .pending-name{font-weight:700;color:var(--text-main);display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pending-cell{color:var(--text-sub);display:flex;align-items:center;gap:5px;}
+  .pending-type{font-weight:800;}
+  .pending-qyc{color:var(--text-sub);font-weight:700;}
+  .all-clear{font-size:11px;color:var(--text-mute);font-weight:700;}
+
+  svg{display:block;}
+  @media (max-width:640px){
+    .header{padding:22px 16px 54px;}
+    .container{padding:20px 12px 50px;}
+    .nav-wrap{padding:0 12px;}
+    table{min-width:760px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="blob1"></div>
+  <div class="blob2"></div>
+  <div class="header-inner">
+    <div>
+      <div class="header-eyebrow">
+        <div class="header-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+        </div>
+        <span>CARTÃO DE TODOS · CAMPO GRANDE/MS</span>
+      </div>
+      <h1>Dashboard de Performance</h1>
+      <p><span id="mesRef"></span> · Gestor Rodolfo Malta · Dados até <span id="lastDate"></span></p>
+    </div>
+    <div class="meta-badge">
+      <div class="label">META MENSAL DA UNIDADE</div>
+      <div class="value"><span id="metaUnidade"></span> vendas</div>
+    </div>
+  </div>
+</div>
+
+<div class="nav-wrap">
+  <div class="nav" id="nav">
+    <button data-tab="geral" class="active">Visão Geral</button>
+    <button data-tab="vendedores">Vendedores</button>
+    <button data-tab="bonificacao">Bonificação</button>
+    <button data-tab="comparativo">Comparativo</button>
+    <button data-tab="pendente">Carteira Pendente</button>
+  </div>
+</div>
+
+<div class="container">
+  <div id="tab-geral"></div>
+  <div id="tab-vendedores" style="display:none"></div>
+  <div id="tab-bonificacao" style="display:none"></div>
+  <div id="tab-comparativo" style="display:none"></div>
+  <div id="tab-pendente" style="display:none"></div>
+</div>
+
+<script>
+const DATA = {"mes_ref": "Fechamento Setembro/2026", "meta_unidade": 800, "meta_diaria": 48, "meta_qyc": 75, "meta_homologacao": 98, "unidade_total_vendas": 1024, "dias_uteis_mes": 22, "dias_uteis_ate_agora": 22, "ultima_data_dados": "30/09/2026", "sellers": [{"id": "ISADORA FRANCO GOMES", "nome": "Isadora Franco Gomes", "entrada": null, "q1": {"vendas": 50, "app_pct": 66.0, "pl_pct": 46.0, "qyc_pct": 60.7, "homolog_pct": 88.0}, "q2": {"vendas": 53, "app_pct": 66.0, "pl_pct": 56.6, "qyc_pct": 68.6, "homolog_pct": 84.9}, "mes": {"vendas": 103, "app_pct": 66.0, "pl_pct": 51.5, "qyc_pct": 64.7, "homolog_pct": 86.4}, "elegivel_q1": false, "elegivel_q2": false, "pendentes_q1": [{"nome": "PATRICIA NOGUEIRA COUTO DOS SANTOS", "data": "15/09/2026", "telefone": "(67) 99129-4124", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "CLAUDINEIA DE SUZA OLIVEIRA", "data": "11/09/2026", "telefone": "(67) 99219-1210", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "DIEGO VICENTE DE ALMEIDA", "data": "05/09/2026", "telefone": "(67) 98103-9951", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "THIAGO OCAMPOS OVANDO", "data": "05/09/2026", "telefone": "(67) 99643-8029", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "DORALICE BARBOSA DE QUEIROZ", "data": "05/09/2026", "telefone": "(67) 99129-8212", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "EDILEUZA DA SILVA PACIÊNCIA", "data": "05/09/2026", "telefone": "(67) 99146-4095", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "LUIZA ROSA SILVA LIMA", "data": "08/09/2026", "telefone": "(67) 99628-3802", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "MANOEL RODRIGUES PINHEIRO", "data": "08/09/2026", "telefone": "(67) 99201-1534", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ULIANA NUNES MOURÃO", "data": "08/09/2026", "telefone": "(67) 98149-6526", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "DOMINICE DO NASCIMENTO LEITE", "data": "08/09/2026", "telefone": "(67) 99135-0943", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "MONYQUE RAIANA AIRES DOS SANTOS DE OLIVEIRA MACHADO", "data": "09/09/2026", "telefone": "(67) 98190-2665", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 66.7}, {"nome": "ANA MARIA RODRIGUES DE NOJOZA", "data": "14/09/2026", "telefone": "(67) 99247-9225", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "EVA CARVALHO ALMEIDA", "data": "14/09/2026", "telefone": "(67) 99977-6625", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "ELIZABETH ALVES DAUZAKER", "data": "14/09/2026", "telefone": "(67) 99278-0399", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "EDILEU RAMALHO FLORIANO", "data": "14/09/2026", "telefone": "(67) 99861-3133", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "NAIR GOMBLAN DE OLIVEIRA", "data": "15/09/2026", "telefone": "(67) 99212-0648", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "DEBORA BEATRIZ PEREIRA ELVINO", "data": "15/09/2026", "telefone": "(67) 99352-6169", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "CELIA SOUZA DE OLIVEIRA RAMALHO", "data": "14/09/2026", "telefone": "(67) 99299-7676", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "MARISA DE OLIVEIRA PEREIRA DE SOUSA", "data": "02/09/2026", "telefone": "(67) 99117-5653", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "ODETE VILHARVA DO BONFIM NASCIMENTO", "data": "08/09/2026", "telefone": "(67) 99115-2179", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "DAYANE DE PAULA PEREIRA NASCIMENTO", "data": "08/09/2026", "telefone": "(67) 98115-5076", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "YOLA GEORGES SLEIMAN", "data": "02/09/2026", "telefone": "(67) 99170-6236", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "CLARA GEHLEN FERNANDES", "data": "08/09/2026", "telefone": "(67) 99323-1763", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "GISELA TOLEDO MONTEIRO", "data": "08/09/2026", "telefone": "(67) 99926-1337", "pendente": "PL", "prioridade": 3, "qyc_pct": 66.7}, {"nome": "LETÍCIA AMARAL PEREIRA", "data": "09/09/2026", "telefone": "(67) 99914-3288", "pendente": "PL", "prioridade": 3, "qyc_pct": 66.7}, {"nome": "PEDRO KINHE KINA BITTENCOURT", "data": "15/09/2026", "telefone": "(67) 99662-5822", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "LUCAS ACOSTA GIMENEZ", "data": "15/09/2026", "telefone": "(67) 99318-6010", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}], "pendentes_q2": [{"nome": "LENIR MARGARIDA DA ROSA", "data": "16/09/2026", "telefone": "(67) 99985-4531", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ILSE EDELVEIS NIEDACK", "data": "17/09/2026", "telefone": "(67) 99146-4204", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "SANDRA REGINA BARROS DA SILVA", "data": "18/09/2026", "telefone": "(67) 99244-2758", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "JUNE ANE BARROS SALIM", "data": "21/09/2026", "telefone": "(67) 99888-1719", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 33.3}, {"nome": "EDER MALHEIROS DE ARRUDA", "data": "21/09/2026", "telefone": "(67) 99813-9774", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "LUCIA REGINA DA SILVA", "data": "23/09/2026", "telefone": "(67) 99819-2461", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ALESSANDRO DA SILVA RODRIGUES", "data": "25/09/2026", "telefone": "(67) 99229-4760", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 33.3}, {"nome": "NEILA APARECIDA DE LIMA", "data": "26/09/2026", "telefone": "(67) 99284-3461", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "LUIZ DO NASCIMENTO SILVA", "data": "26/09/2026", "telefone": "(67) 99601-6242", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 66.7}, {"nome": "LIDIANE SOUZA ROJES DE ARAUJO", "data": "26/09/2026", "telefone": "(67) 99933-0423", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "VANESSA TOLEDO SANTOS", "data": "28/09/2026", "telefone": "(67) 99277-4734", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "MARIA EDUARDA PEREIRA BARBOSA", "data": "28/09/2026", "telefone": "(67) 99878-4161", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "GELSON SCHULZ PACHECO", "data": "28/09/2026", "telefone": "(67) 99695-7468", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "LÉA VIEIRA DE OLIVEIRA MACHADO", "data": "28/09/2026", "telefone": "(67) 99223-9847", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "MARILENE APARECIDA DOS SANTOS PEREIRA", "data": "28/09/2026", "telefone": "(67) 99190-3846", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "IVAN PABLO VIEIRA DOS SANTOS", "data": "28/09/2026", "telefone": "(67) 98129-7574", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "SILVIA REGINA DE OLIVEIRA", "data": "28/09/2026", "telefone": "(67) 99152-3881", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "JULIA VEGA DE OLIVEIRA", "data": "29/09/2026", "telefone": "(67) 99334-6374", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "NATHALIA MORAES OLIVA", "data": "28/09/2026", "telefone": "(67) 99289-0038", "pendente": "PL", "prioridade": 3, "qyc_pct": 66.7}, {"nome": "FLAVIA MOURA MACHADO JUSTO", "data": "18/09/2026", "telefone": "(51) 99163-7225", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "LISANDRA VERAS NEVES", "data": "24/09/2026", "telefone": "(86) 99506-2457", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "STEFANE JARA AMARILLA ESCOBAR", "data": "24/09/2026", "telefone": "(67) 99131-2865", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "BRUNA MAYARA", "data": "26/09/2026", "telefone": "(67) 99222-8567", "pendente": "PL", "prioridade": 3, "qyc_pct": 66.7}], "cashback": {"faixa_cashin": ">= R$3,00", "elegivel": true}, "refuturiza_q1": 3, "refuturiza_q2": 3, "refuturiza": 6, "refuturiza_q1_ok": true, "refuturiza_q2_ok": true, "tim": 0, "qyc_quinzena_atual": 68.6, "meta_bonificacao": 100, "projecao_mes": 103, "progresso_bonificacao_pct": 100, "bateu_meta_vendas": true, "elegivel_premiacao": false, "bateu_bonificacao": false, "premio_bruto": 1000, "premio_ajustado": 686.0}, {"id": "JANDERSON PATRICK SILVA DE SOUZA", "nome": "Janderson Patrick Silva de Souza", "entrada": null, "q1": {"vendas": 52, "app_pct": 88.5, "pl_pct": 75.0, "qyc_pct": 88.5, "homolog_pct": 100.0}, "q2": {"vendas": 60, "app_pct": 80.0, "pl_pct": 68.3, "qyc_pct": 76.7, "homolog_pct": 93.3}, "mes": {"vendas": 112, "app_pct": 83.9, "pl_pct": 71.4, "qyc_pct": 82.1, "homolog_pct": 96.4}, "elegivel_q1": true, "elegivel_q2": true, "pendentes_q1": [{"nome": "MARIA DOS SANTOS REIS", "data": "03/09/2026", "telefone": "(67) 99937-8416", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "VITOR HENRIQUE MARTINS", "data": "03/09/2026", "telefone": "(14) 99635-9873", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "GUILHERME FRANCISCO DO NASCIMENTO NETO", "data": "04/09/2026", "telefone": "(67) 98401-7390", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "CRISTIANO GONÇALVES", "data": "05/09/2026", "telefone": "(67) 99327-6543", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "MARIA RITA DE SOUZA", "data": "08/09/2026", "telefone": "(67) 99286-4162", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "CLEONICE MANDU SILVA", "data": "08/09/2026", "telefone": "(67) 99161-5563", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "TATIANA APARECIDA CUNHA ARISTIMUNHA", "data": "04/09/2026", "telefone": "(67) 98423-1324", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "ALBINA STELA ROJAS DA CUNHA", "data": "08/09/2026", "telefone": "(67) 98131-2338", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "CAROLINA DIAS DA SILVA", "data": "08/09/2026", "telefone": "(67) 98441-6511", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "WILMA MENEZES DOS SANTOS ESPINOLA", "data": "14/09/2026", "telefone": "(67) 99203-1710", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "ANNA JULLYA SOUZA OLIVEIRA DE ARAÚJO", "data": "15/09/2026", "telefone": "(67) 98156-9972", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "JOSÉ EDUARDO GONÇALVES DE ANDRADE", "data": "15/09/2026", "telefone": "(67) 99158-7844", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "GIAN EDMILSON MARTINS DE FARIAS", "data": "15/09/2026", "telefone": "(67) 99873-9418", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}], "pendentes_q2": [{"nome": "WAGNER RODRIGUES DE LARA LOPES", "data": "16/09/2026", "telefone": "(67) 99218-3280", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ADRIANA DE JESUS RODRIGUES", "data": "18/09/2026", "telefone": "(67) 99147-5471", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "AMANDA RIBEIRO DEMISQUE", "data": "18/09/2026", "telefone": "(67) 99165-1060", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ISRAEL JOSE DE SOUZA", "data": "19/09/2026", "telefone": "(67) 99134-6134", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "RAMAO NUNES COLMAN", "data": "21/09/2026", "telefone": "(67) 99680-0857", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "MARCIA MARIA DE LIRA", "data": "24/09/2026", "telefone": "(67) 98172-6770", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "LEONARDO CARVALHO PEREZ", "data": "24/09/2026", "telefone": "(67) 99660-6608", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "PRISCILA DA SILVA PEREIRA", "data": "26/09/2026", "telefone": "(67) 99318-0770", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "GEYZALENE ESPINDOLA FLORES GALHARDO", "data": "28/09/2026", "telefone": "(67) 99203-4476", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "CECÍLIA MARIANA DE ALBUQUERQUE FONSECA", "data": "30/09/2026", "telefone": "(67) 99293-2259", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "DAVI OLIVEIRA DA SILVA DA FONSECA", "data": "30/09/2026", "telefone": "(67) 99293-2259", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "RAQUEL DE LIZIERBARRIOS", "data": "30/09/2026", "telefone": "(67) 99691-8280", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "PAULO HENRIQUE SISCATI LOURENÇO", "data": "18/09/2026", "telefone": "(67) 99143-4136", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "MARIA GISEUDA DE OLIVEIRA DUARTE PASSOS", "data": "19/09/2026", "telefone": "(67) 98173-6624", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "CARLINDA DIAS MALDONADO", "data": "21/09/2026", "telefone": "(67) 99291-3662", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "SOLANGE APARECIDA GARCIA ROSA", "data": "22/09/2026", "telefone": "(67) 99345-3771", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "AMANDA BREGOCHI DALMATI", "data": "22/09/2026", "telefone": "(67) 99340-1867", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "VALDETH SODRÉ", "data": "22/09/2026", "telefone": "(67) 99327-5656", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "JHENNYFER SKARLATH", "data": "24/09/2026", "telefone": "(67) 99179-5234", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}], "cashback": {"faixa_cashin": ">= R$3,00", "elegivel": true}, "refuturiza_q1": 2, "refuturiza_q2": 2, "refuturiza": 4, "refuturiza_q1_ok": false, "refuturiza_q2_ok": false, "tim": 0, "qyc_quinzena_atual": 76.7, "meta_bonificacao": 100, "projecao_mes": 112, "progresso_bonificacao_pct": 100, "bateu_meta_vendas": true, "elegivel_premiacao": true, "bateu_bonificacao": true, "premio_bruto": 1000, "premio_ajustado": 767.0}, {"id": "JESSICA THALIA DA SILVA POSCA", "nome": "Jessica Thalia da Silva Posca", "entrada": null, "q1": {"vendas": 51, "app_pct": 84.3, "pl_pct": 76.5, "qyc_pct": 98.0, "homolog_pct": 98.0}, "q2": {"vendas": 54, "app_pct": 77.8, "pl_pct": 57.4, "qyc_pct": 99.1, "homolog_pct": 90.7}, "mes": {"vendas": 105, "app_pct": 81.0, "pl_pct": 66.7, "qyc_pct": 98.6, "homolog_pct": 94.3}, "elegivel_q1": true, "elegivel_q2": true, "pendentes_q1": [{"nome": "SILVIA LETICIA DA SILVA SOUZA SABRA", "data": "11/09/2026", "telefone": "(67) 99187-5757", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "OTILDE RODRIGUES GODOY", "data": "08/09/2026", "telefone": "(67) 99106-7000", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "MARIA JOSE DOS SANTOS MAIA", "data": "03/09/2026", "telefone": "(67) 99895-2526", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ROSELY NOGUEIRA NANTES", "data": "04/09/2026", "telefone": "(67) 99107-9203", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ANTÔNIO MOREL", "data": "05/09/2026", "telefone": "(67) 99961-9722", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "MARIA AUGUSTINA BIRRIEL LOPEZ", "data": "05/09/2026", "telefone": "(67) 99120-2435", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "HIGOR CORREA BORGES", "data": "08/09/2026", "telefone": "(67) 99128-5774", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "LUIZ ALVES CASSEMIRO", "data": "10/09/2026", "telefone": "(67) 99971-1920", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "IZABEL VACCARI COXEV", "data": "02/09/2026", "telefone": "(67) 99923-9922", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "ANTONIO VIEIRA DE SOUZA", "data": "08/09/2026", "telefone": "(67) 98448-7543", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "JOSE ALBINO DO SANTOS SILVA", "data": "09/09/2026", "telefone": "(67) 99283-7037", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "PEDRO TEIXEIRA MENDES", "data": "15/09/2026", "telefone": "(67) 99141-7833", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}], "pendentes_q2": [{"nome": "ISRAYANNE GOMES", "data": "28/09/2026", "telefone": "(67) 99118-2326", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "SIRLEI DA SILVA", "data": "25/09/2026", "telefone": "(67) 99960-9712", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "DEBORA SAMPAIO FREITAS", "data": "26/09/2026", "telefone": "(67) 99277-1079", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "LAYS DYONY MAGALHÃES BRITO", "data": "26/09/2026", "telefone": "(67) 99249-1149", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ANTENOR LOPES", "data": "28/09/2026", "telefone": "(67) 99973-2710", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "VERA LUCIA DA SILVA", "data": "28/09/2026", "telefone": "(67) 98139-5807", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "HEIDRIELLY GOMES CLAVICO", "data": "28/09/2026", "telefone": "(67) 99180-1267", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "DIEGO MONTANIA DOS SANTOS", "data": "28/09/2026", "telefone": "(67) 99218-8155", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "LUANA FELIZARDO VICENTE DE SOUZA", "data": "28/09/2026", "telefone": "(67) 99176-5776", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "LUANA BURGATO VIANA", "data": "29/09/2026", "telefone": "(67) 99109-8989", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "VALMIR E SILVA CARDOSO", "data": "30/09/2026", "telefone": "(67) 99943-3779", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "DOROTILDES SOUZA DE LIMA", "data": "30/09/2026", "telefone": "(67) 99278-1296", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "JULIANA DA SILVA VALENTE PIRES", "data": "21/09/2026", "telefone": "(67) 99240-5099", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "HEITOR CÂNDIDO GARCIA", "data": "24/09/2026", "telefone": "(67) 99963-6990", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "THÁBITA FERREIRA DA SILVA", "data": "24/09/2026", "telefone": "(67) 99132-4255", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "ANALIA AUGUSTO CAMILO", "data": "25/09/2026", "telefone": "(67) 98404-8905", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "PAULO ALBERTO DA SILVA SOUZA", "data": "26/09/2026", "telefone": "(67) 99121-2918", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "CHARLES SOARDI NOGUEIRA", "data": "26/09/2026", "telefone": "(67) 99169-3113", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "ARIANA FERNANDES ADORNO", "data": "26/09/2026", "telefone": "(67) 99279-3039", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "LUCICLEIA DOS SANTOS SILVA GONÇALVES", "data": "26/09/2026", "telefone": "(67) 99118-4629", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "JULIANA FERNANDES CALVES LEONEL", "data": "28/09/2026", "telefone": "(67) 99253-4420", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "CLAUDIANE ALVES DA SILVA CAVALCANTE", "data": "28/09/2026", "telefone": "(67) 99641-1848", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "CHRISTIANE PEREIRA DE MOURA", "data": "29/09/2026", "telefone": "(67) 99258-7432", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}], "cashback": {"faixa_cashin": ">= R$3,00", "elegivel": true}, "refuturiza_q1": 3, "refuturiza_q2": 0, "refuturiza": 3, "refuturiza_q1_ok": true, "refuturiza_q2_ok": false, "tim": 0, "qyc_quinzena_atual": 99.1, "meta_bonificacao": 100, "projecao_mes": 105, "progresso_bonificacao_pct": 100, "bateu_meta_vendas": true, "elegivel_premiacao": true, "bateu_bonificacao": true, "premio_bruto": 1000, "premio_ajustado": 991.0}, {"id": "JOYCE DE ANUNCIACAO DE SOUZA", "nome": "Joyce de Anunciação de Souza", "entrada": null, "q1": {"vendas": 61, "app_pct": 95.1, "pl_pct": 93.4, "qyc_pct": 97.3, "homolog_pct": 98.4}, "q2": {"vendas": 68, "app_pct": 91.2, "pl_pct": 89.7, "qyc_pct": 97.1, "homolog_pct": 98.5}, "mes": {"vendas": 129, "app_pct": 93.0, "pl_pct": 91.5, "qyc_pct": 97.2, "homolog_pct": 98.4}, "elegivel_q1": true, "elegivel_q2": true, "pendentes_q1": [{"nome": "ADRIANO HENRIQUE ALVES", "data": "02/09/2026", "telefone": "(18) 99740-2201", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "RIZOLENE MORAIS DOS SANTOS SILVA", "data": "05/09/2026", "telefone": "(38) 99121-3892", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "MARIA ALBETIZA ALVES", "data": "15/09/2026", "telefone": "(67) 99276-6042", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ROBERTO LUIS DE MORAES DOROTEU", "data": "08/09/2026", "telefone": "(67) 99610-1191", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}], "pendentes_q2": [{"nome": "ADRIELI DA SILVA", "data": "28/09/2026", "telefone": "(67) 99969-9456", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "JAYME NUNES NOGUEIRA", "data": "28/09/2026", "telefone": "(67) 99222-1420", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "JULIANA PAZ DE BRAVO", "data": "28/09/2026", "telefone": "(67) 99170-6665", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "RAYELLE DIAS RIBEIRO DOS SANTOS", "data": "30/09/2026", "telefone": "(67) 99338-9910", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "CAIO LEMES JUSTINIANO", "data": "30/09/2026", "telefone": "(67) 98447-7908", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "MARIA JOSÉ ARAÚJO DA SILVA", "data": "30/09/2026", "telefone": "(67) 99683-5290", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "LUCIMAR LOPES NOVAES", "data": "26/09/2026", "telefone": "(67) 99199-0452", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}], "cashback": {"faixa_cashin": ">= R$3,00", "elegivel": true}, "refuturiza_q1": 7, "refuturiza_q2": 8, "refuturiza": 15, "refuturiza_q1_ok": true, "refuturiza_q2_ok": true, "tim": 0, "qyc_quinzena_atual": 97.1, "meta_bonificacao": 100, "projecao_mes": 129, "progresso_bonificacao_pct": 100, "bateu_meta_vendas": true, "elegivel_premiacao": true, "bateu_bonificacao": true, "premio_bruto": 1000, "premio_ajustado": 971.0}, {"id": "REBECA CANDELARIA TEIXEIRA TRINDADE", "nome": "Rebeca Candelaria Teixeira Trindade", "entrada": null, "q1": {"vendas": 36, "app_pct": 80.6, "pl_pct": 52.8, "qyc_pct": 91.7, "homolog_pct": 80.6}, "q2": {"vendas": 52, "app_pct": 78.8, "pl_pct": 61.5, "qyc_pct": 78.2, "homolog_pct": 88.5}, "mes": {"vendas": 88, "app_pct": 79.5, "pl_pct": 58.0, "qyc_pct": 83.7, "homolog_pct": 85.2}, "elegivel_q1": true, "elegivel_q2": true, "pendentes_q1": [{"nome": "NILCELENE VELOSO DE MORAIS", "data": "01/09/2026", "telefone": "(67) 99185-0406", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ALICE CRISPIM DA SILVA", "data": "05/09/2026", "telefone": "(67) 99802-5450", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "AUDES AQUINO LUBAS", "data": "08/09/2026", "telefone": "(67) 99631-6677", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ELIZIANNY DA SILVA FELIX", "data": "08/09/2026", "telefone": "(67) 98125-2786", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 33.3}, {"nome": "ELIZIANA ALVES DA SILVA", "data": "08/09/2026", "telefone": "(67) 99289-2045", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "SIDINEI DA SILVA", "data": "10/09/2026", "telefone": "(67) 99116-8533", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "LUIZ ANTONIO DA SILVA FEITOSA", "data": "11/09/2026", "telefone": "(67) 98408-1265", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "JAYD DOS SANTOS DAMIÃO", "data": "08/09/2026", "telefone": "(67) 99252-4007", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "DACI ACOSTA CABALHEIRO", "data": "08/09/2026", "telefone": "(67) 99289-0267", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "MARLENE DOMINGOS DA COSTA", "data": "02/09/2026", "telefone": "(67) 99139-1894", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "ALINE MENDES PORTILHO", "data": "05/09/2026", "telefone": "(67) 99655-7959", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "JOANA MARIA MORAES", "data": "05/09/2026", "telefone": "(67) 99175-2722", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "LAUCIDIO SANTOS DE OLIVEIRA", "data": "08/09/2026", "telefone": "(67) 99113-6138", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "ANA PAULA BASILIO", "data": "10/09/2026", "telefone": "(67) 99961-8067", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "VERA LUCIA COBALCHINI", "data": "14/09/2026", "telefone": "(67) 98188-5900", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "CLAUDIAN TEIXEIRA FERREIRA", "data": "15/09/2026", "telefone": "(67) 98165-4656", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "NOEMI TEIXEIRA", "data": "15/09/2026", "telefone": "(67) 99112-7141", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}], "pendentes_q2": [{"nome": "APARECIDA JOANA DE SOUZA", "data": "17/09/2026", "telefone": "(67) 99315-8452", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "IVETE CORREIA DA COSTA", "data": "26/09/2026", "telefone": "(67) 99137-3164", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ALEX SANDRO COUTINHO SILVA", "data": "26/09/2026", "telefone": "(67) 99249-8855", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "VALERIA CHRISTINA PRYCHODCO VELASQUEZ", "data": "26/09/2026", "telefone": "(67) 99271-6938", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "LARISSA MANJA", "data": "28/09/2026", "telefone": "(67) 99665-7874", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "ESTER REIS MENDES PORTILLO", "data": "28/09/2026", "telefone": "(67) 99903-6996", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "OLIVER SILVA RIBAS", "data": "28/09/2026", "telefone": "(67) 99311-8752", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "GLESILAINE BENITES PACHE", "data": "28/09/2026", "telefone": "(67) 99309-0477", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 66.7}, {"nome": "NATALINA FERREIRA DA COSTA DE LEMOS", "data": "30/09/2026", "telefone": "(67) 99139-7664", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "LEIDY DAYANA DO NASCIMENTO MONTEIRO DOS SANTOS", "data": "30/09/2026", "telefone": "(67) 99122-5707", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "WILLIAN NANTES LEONEL", "data": "30/09/2026", "telefone": "(67) 98138-4147", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "CARLOS MESSIAS", "data": "23/09/2026", "telefone": "(67) 99225-3738", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "PAMELA CRISTINA CAMARGO ARAKAKI", "data": "21/09/2026", "telefone": "(67) 99159-8751", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "JACKELINE SANTANA ARMOA", "data": "24/09/2026", "telefone": "(67) 99243-2325", "pendente": "PL", "prioridade": 3, "qyc_pct": 33.3}, {"nome": "PAULO ROBERTO OSTEMBERG DA SILVA", "data": "26/09/2026", "telefone": "(67) 99247-7397", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "DAYLA DUTRA SOARES", "data": "28/09/2026", "telefone": "(67) 98218-0097", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "DIRLEU PIRES FAGUNDES", "data": "28/09/2026", "telefone": "(67) 99987-3767", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "GABRIELI SOARES ANDRADE", "data": "28/09/2026", "telefone": "(67) 99901-4400", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "PATRICK LUIS LOPES", "data": "29/09/2026", "telefone": "(67) 99812-0655", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "GABRIELA DE SOUZA ALVES", "data": "30/09/2026", "telefone": "(67) 99154-0727", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}], "cashback": {"faixa_cashin": ">= R$3,00", "elegivel": true}, "refuturiza_q1": 1, "refuturiza_q2": 5, "refuturiza": 6, "refuturiza_q1_ok": false, "refuturiza_q2_ok": true, "tim": 0, "qyc_quinzena_atual": 78.2, "meta_bonificacao": 100, "projecao_mes": 88, "progresso_bonificacao_pct": 88.0, "bateu_meta_vendas": false, "elegivel_premiacao": false, "bateu_bonificacao": false, "premio_bruto": 1000, "premio_ajustado": 782.0}, {"id": "LEANDRO VINICIUS GOMES DOS REIS", "nome": "Leandro Vinicius Gomes dos Reis", "entrada": null, "q1": {"vendas": 0, "app_pct": 0, "pl_pct": 0, "qyc_pct": 0, "homolog_pct": 0}, "q2": {"vendas": 39, "app_pct": 56.4, "pl_pct": 38.5, "qyc_pct": 37.6, "homolog_pct": 100.0}, "mes": {"vendas": 39, "app_pct": 56.4, "pl_pct": 38.5, "qyc_pct": 37.6, "homolog_pct": 100.0}, "elegivel_q1": false, "elegivel_q2": false, "pendentes_q1": [], "pendentes_q2": [{"nome": "PAULA CAROLINE LEAL", "data": "24/09/2026", "telefone": "(67) 99295-1507", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "VITORIA VILLALBA MARCELINO", "data": "28/09/2026", "telefone": "(67) 99137-5809", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "CAROL DE MORAES GALEANO", "data": "28/09/2026", "telefone": "(67) 99351-3223", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "MARIZETE RODRIGUES BRITO", "data": "18/09/2026", "telefone": "(67) 99971-3648", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "MARIA LINEIDE RIBEIRO DOS SANTOS", "data": "28/09/2026", "telefone": "(67) 99135-1097", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "IVANIR APARECIDA DA ROCHA", "data": "26/09/2026", "telefone": "(67) 99287-3222", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 33.3}, {"nome": "EDIVANIA TEIXEIRA BARBOSA", "data": "29/09/2026", "telefone": "(67) 99933-1165", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 33.3}, {"nome": "VIVIANE ALVES PEREIRA", "data": "28/09/2026", "telefone": "(67) 99653-4595", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 66.7}, {"nome": "MARCIA REGINA DE ALMEIDA", "data": "28/09/2026", "telefone": "(67) 99305-5404", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "DEUSDETE GASPAR", "data": "28/09/2026", "telefone": "(67) 99242-6663", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 33.3}, {"nome": "JOICE VLADIMARA DA SILVA QUINTINO", "data": "28/09/2026", "telefone": "(67) 98151-0239", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "PAULO CÉSAR ROCHA SALES", "data": "30/09/2026", "telefone": "(67) 99115-3782", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "REGIANE SANTOS GAIA", "data": "30/09/2026", "telefone": "(67) 98461-9140", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "JEANE CARLA DE OLIVEIRA", "data": "28/09/2026", "telefone": "(67) 99247-1787", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "SABRINA APARECIDA DA COSTA", "data": "28/09/2026", "telefone": "(67) 99222-4764", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "DOMINIQUI ALVES INGUARDA SOUSA", "data": "28/09/2026", "telefone": "(67) 99892-5784", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 66.7}, {"nome": "NICOLI ZIMMER MARIM", "data": "28/09/2026", "telefone": "(67) 99891-2865", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "SONIA DE SOUZA MARTINS", "data": "26/09/2026", "telefone": "(67) 99139-8858", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "VALENTINA LIVRADO MEDEIRO", "data": "18/09/2026", "telefone": "(67) 99936-4465", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "MIRIAM ALVES DA SILVA", "data": "26/09/2026", "telefone": "(67) 99209-3270", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "DANIELE DE CASTRO SANTOS", "data": "18/09/2026", "telefone": "(67) 98203-5796", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "PAULO VICTOR SILVA DE OLIVEIRA", "data": "26/09/2026", "telefone": "(67) 99922-1416", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}, {"nome": "MARIA SUELI DE OLIVEIRA", "data": "17/09/2026", "telefone": "(67) 98442-3407", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "MYLLENA DA ROSA BATISTA", "data": "18/09/2026", "telefone": "(67) 99273-7681", "pendente": "PL", "prioridade": 3, "qyc_pct": 0}], "cashback": {"faixa_cashin": "R$0,00", "elegivel": false}, "refuturiza_q1": 0, "refuturiza_q2": 2, "refuturiza": 2, "refuturiza_q1_ok": false, "refuturiza_q2_ok": false, "tim": 0, "qyc_quinzena_atual": 37.6, "meta_bonificacao": 100, "projecao_mes": 39, "progresso_bonificacao_pct": 39.0, "bateu_meta_vendas": false, "elegivel_premiacao": false, "bateu_bonificacao": false, "premio_bruto": 1000, "premio_ajustado": 376.0}, {"id": "POLYANA CANDIDO DE ARAUJO", "nome": "Polyana Candido de Araujo", "entrada": null, "q1": {"vendas": 32, "app_pct": 81.2, "pl_pct": 59.4, "qyc_pct": 96.9, "homolog_pct": 96.9}, "q2": {"vendas": 67, "app_pct": 71.6, "pl_pct": 65.7, "qyc_pct": 85.8, "homolog_pct": 86.6}, "mes": {"vendas": 99, "app_pct": 74.7, "pl_pct": 63.6, "qyc_pct": 89.4, "homolog_pct": 89.9}, "elegivel_q1": true, "elegivel_q2": false, "pendentes_q1": [{"nome": "CLAUDIA CAETANO DE BARROS", "data": "08/09/2026", "telefone": "(67) 98151-3082", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "DAIANE GANÇALVES DUARTE", "data": "05/09/2026", "telefone": "(67) 99290-7372", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "KELY REGIHA CARDOSO GONÇALVES", "data": "08/09/2026", "telefone": "(67) 98130-2538", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ELAINE CRISTINA RODRIGUES", "data": "14/09/2026", "telefone": "(67) 98153-8181", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ROBERTO MARQUES PINTO", "data": "15/09/2026", "telefone": "(67) 99178-1654", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "VILMA MIRANDA DE OLIVEIRA", "data": "15/09/2026", "telefone": "(67) 99207-6054", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "GILBERTO JENNER DE OLIVEIRA VASCONCELOS", "data": "08/09/2026", "telefone": "(67) 99938-1015", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "VANESSA LEMOS SILVA", "data": "08/09/2026", "telefone": "(67) 99216-8166", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "MAIANE DOS SANTOS SILVA BUENO", "data": "02/09/2026", "telefone": "(67) 98223-1052", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "LUCAS DA SILVA ROSA", "data": "02/09/2026", "telefone": "(67) 99125-2342", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "NATALIA LEITE SILVA", "data": "08/09/2026", "telefone": "(67) 99288-6569", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "MÔNICA ADAMES RONCATO", "data": "09/09/2026", "telefone": "(67) 99265-2064", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "ANA GRACILENE SOARES BARRETO", "data": "10/09/2026", "telefone": "(67) 99147-6445", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}], "pendentes_q2": [{"nome": "JUCILENE GUILEN BORGES AGUEIRO", "data": "28/09/2026", "telefone": "(67) 99601-5639", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "EVA TEREZINHA ROMEIRO", "data": "29/09/2026", "telefone": "(67) 98453-8872", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "ARMINDA LOPES HOFFMEISTER RIBEIRO", "data": "26/09/2026", "telefone": "(67) 99905-0748", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "GESSICA ALAIDE DA SILVA BENEVIDES", "data": "23/09/2026", "telefone": "(67) 98142-4964", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "MARIA ELENIR FARIA", "data": "17/09/2026", "telefone": "(67) 99170-7330", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "SALATIE GOMES", "data": "18/09/2026", "telefone": "(67) 99286-3802", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "LUCIANE TARGINO DA SILVA", "data": "22/09/2026", "telefone": "(67) 99215-9731", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "SEBASTIAO MAÇAL DE MENEÇES", "data": "24/09/2026", "telefone": "(67) 99186-6150", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "JANETE DE LIMA", "data": "25/09/2026", "telefone": "(67) 99873-8633", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 66.7}, {"nome": "NORMA SOUZA", "data": "26/09/2026", "telefone": "(67) 99641-1768", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "SANTIAGO ANTONIO ALVARENGA", "data": "26/09/2026", "telefone": "(67) 99263-6961", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "PÂMELA DOS SANTOS BOGARIM", "data": "26/09/2026", "telefone": "(67) 99601-5535", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 50.0}, {"nome": "MICHELLE PRISCILA MARECO GUEDES", "data": "28/09/2026", "telefone": "(67) 99349-9316", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 66.7}, {"nome": "TANI CRISTINA DE BRITO LANDES", "data": "28/09/2026", "telefone": "(67) 99229-5179", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "DAYANE RODRIGUES DA CRUZ", "data": "28/09/2026", "telefone": "(67) 99815-0596", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 0}, {"nome": "ANA PAULA NOGUEIRA FRANCO", "data": "30/09/2026", "telefone": "(67) 99240-0465", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "MARILENE FERNADES FLORES", "data": "30/09/2026", "telefone": "(67) 99167-6641", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "KARINA DA SILVA ARAÚJO", "data": "30/09/2026", "telefone": "(67) 98456-8268", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "LUZIA PADILHA DE OLIVEIRA", "data": "30/09/2026", "telefone": "(67) 99269-5817", "pendente": "APP + PL", "prioridade": 1, "qyc_pct": 100}, {"nome": "OLIRIA ROCHA DA SILVA", "data": "22/09/2026", "telefone": "(67) 99105-2043", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "MARIA MADALENA DE ARRUDA", "data": "21/09/2026", "telefone": "(67) 99288-0800", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "TELMA CRISTINA DOS SANTOS", "data": "28/09/2026", "telefone": "(67) 99287-5887", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}, {"nome": "GREICE APARECIDA DE ALENCAR NOGIRI", "data": "28/09/2026", "telefone": "(67) 99191-7826", "pendente": "PL", "prioridade": 3, "qyc_pct": 100}], "cashback": {"faixa_cashin": ">= R$3,00", "elegivel": true}, "refuturiza_q1": 2, "refuturiza_q2": 1, "refuturiza": 3, "refuturiza_q1_ok": false, "refuturiza_q2_ok": false, "tim": 0, "qyc_quinzena_atual": 85.8, "meta_bonificacao": 100, "projecao_mes": 99, "progresso_bonificacao_pct": 99.0, "bateu_meta_vendas": false, "elegivel_premiacao": false, "bateu_bonificacao": false, "premio_bruto": 1000, "premio_ajustado": 858.0}], "refuturiza_total": 40, "meta_refuturiza": 45, "refuturiza_pct": 88.9, "refuturiza_outros": 1, "refuturiza_desatualizado": false, "meta_refuturiza_quinzena": 3, "tim_total": 6, "meta_tim": 20, "tim_pct": 30.0, "tim_desatualizado": true, "mostrar_refuturiza_tim": false, "quinzena_atual": "q2", "unidade_projecao": 1024, "unidade_pct_meta": 128.0, "dias_uteis_restantes": 0, "vendas_faltantes": 0, "ritmo_necessario": 0, "ritmo_atual": 46.5, "ritmo_necessario_por_vendedor": 0, "ritmo_status": "batida"};
+const C = {darkGreen:"#007A5A", medGreen:"#00A078", lightGreen:"#E6F9F3", gold:"#C8972B", red:"#C0392B"};
+
+const ICONS = {
+  users: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
+  target: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>',
+  trendUp: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
+  trendDown: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>',
+  minus: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>',
+  trophy: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>',
+  trophySm: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>',
+  alert: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>',
+  check: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+  x: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+  phone: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>',
+  cal: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>',
+  chevron: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>',
+  flag: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>',
+  smartphone: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>',
+  card: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>',
+  wallet: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>',
+  arrow: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>',
+  phoneCall: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>',
+  refresh: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>',
+};
+
+function formatBRL(v){
+  return `R$ ${v.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d)(?=,))/g, ".")}`;
+}
+function initials(name){
+  const p = name.trim().split(" ");
+  return (p[0][0] + (p[1] ? p[1][0] : "")).toUpperCase();
+}
+function esc(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+let state = { tab: "geral", quinzena: (DATA.quinzena_atual || "q2"), quinzenaPend: (DATA.quinzena_atual || "q2") };
+
+const TABS = [
+  ["geral","Visão Geral"],
+  ["vendedores","Vendedores"],
+  ["bonificacao","Bonificação"],
+  ["comparativo","Comparativo"],
+  ["pendente","Carteira Pendente"],
+];
+
+function renderNav(){
+  document.querySelectorAll("#nav button").forEach(btn=>{
+    btn.classList.toggle("active", btn.dataset.tab === state.tab);
+  });
+}
+function bindNav(){
+  document.querySelectorAll("#nav button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      state.tab = btn.dataset.tab;
+      renderAll();
+    });
+  });
+}
+
+function statusBadge(ok, labelOk="Elegível", labelNo="Não elegível"){
+  return `<span class="badge ${ok?'ok':'no'}">${ok?ICONS.check:ICONS.x} ${ok?labelOk:labelNo}</span>`;
+}
+
+function miniBar(label, value, target, icon){
+  const ok = value >= target;
+  const color = ok ? C.medGreen : value >= target*0.7 ? C.gold : C.red;
+  return `
+  <div class="mini-bar">
+    <div class="mini-bar-top">
+      <span class="mini-bar-label" style="color:${color === C.red ? '#4B5D58' : '#4B5D58'}">${icon} ${label}</span>
+      <span class="mini-bar-value" style="color:${color}">${value.toFixed(1)}%</span>
+    </div>
+    <div class="mini-bar-track">
+      <div class="mini-bar-fill" style="width:${Math.min(value,100)}%;background:${color}"></div>
+    </div>
+  </div>`;
+}
+
+function sellerCardHtml(s, quinzena){
+  const data = quinzena === "mes" ? s.mes : quinzena === "q1" ? s.q1 : s.q2;
+  const eligForView = quinzena === "q1" ? s.elegivel_q1 : quinzena === "q2" ? s.elegivel_q2 : null;
+  const isNew = !!s.entrada;
+  const entradaTxt = isNew ? `Entrada em ${s.entrada.split("-").reverse().join("/")}` : "";
+  const smartIcon = `<span style="color:currentColor;display:inline-flex;vertical-align:-2px">${ICONS.smartphone}</span>`;
+  const cardIcon = `<span style="color:currentColor;display:inline-flex;vertical-align:-2px">${ICONS.card}</span>`;
+  return `
+  <div class="card seller-card">
+    <div class="seller-head">
+      <div class="avatar">${initials(s.nome)}</div>
+      <div style="flex:1;min-width:0">
+        <div class="seller-name">${esc(s.nome)}</div>
+        ${entradaTxt ? `<div class="seller-sub">${entradaTxt}</div>` : ""}
+      </div>
+      ${eligForView !== null ? statusBadge(eligForView) : ""}
+    </div>
+    <div class="stat-row">
+      <div class="stat-box" style="background:${C.lightGreen}">
+        <div class="val" style="color:${C.darkGreen}">${data.vendas}</div>
+        <div class="lbl">VENDAS ${quinzena==="mes"?"NO MÊS":quinzena.toUpperCase()}</div>
+      </div>
+      <div class="stat-box" style="background:#FBF6EA">
+        <div class="val" style="color:${C.gold}">${data.qyc_pct}%</div>
+        <div class="lbl">QYC</div>
+      </div>
+    </div>
+    <div>
+      ${miniBar("APP Baixado", data.app_pct, 75, smartIcon)}
+      ${miniBar("PL Ativa", data.pl_pct, 50, cardIcon)}
+    </div>
+    <div class="cashback-row">
+      <div class="cashback-left">
+        <span style="display:inline-flex;color:${s.cashback.elegivel ? C.medGreen : '#B0BBB7'}">${ICONS.wallet}</span>
+        Cashback: ${s.cashback.faixa_cashin ? esc(s.cashback.faixa_cashin) : "Sem dado"}
+      </div>
+      ${s.cashback.elegivel
+        ? `<span style="font-size:10.5px;font-weight:800;color:${C.medGreen}">Elegível</span>`
+        : `<span style="font-size:10.5px;font-weight:800;color:#B0BBB7">—</span>`}
+    </div>
+  </div>`;
+}
+
+function kpiHtml(icon, label, value, sub, accent){
+  return `
+  <div class="card kpi">
+    <div class="kpi-top">
+      <div class="kpi-icon" style="background:${accent}1A;color:${accent}">${icon}</div>
+      <span class="kpi-label">${label}</span>
+    </div>
+    <div class="kpi-value">${value}</div>
+    ${sub ? `<div class="kpi-sub">${sub}</div>` : ""}
+  </div>`;
+}
+
+function gaugeRingHtml(percent, size=132){
+  const stroke = 13;
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const clamped = Math.min(percent, 100);
+  const color = percent >= 100 ? C.medGreen : percent >= 60 ? C.darkGreen : C.gold;
+  const offset = c - (clamped/100)*c;
+  return `
+  <div style="position:relative;width:${size}px;height:${size}px">
+    <svg width="${size}" height="${size}" style="transform:rotate(-90deg)">
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="#EDF2F0" stroke-width="${stroke}" fill="none"></circle>
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="${color}" stroke-width="${stroke}" fill="none"
+        stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"
+        style="transition:stroke-dashoffset .6s ease"></circle>
+    </svg>
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div style="font-size:24px;font-weight:900;color:#173A31">${percent}%</div>
+      <div style="font-size:10px;color:#7C8B86;font-weight:700">DA META</div>
+    </div>
+  </div>`;
+}
+
+function renderGeral(){
+  const el = document.getElementById("tab-geral");
+  const teamTotal = DATA.sellers.reduce((a,s)=>a+s.mes.vendas,0);
+  const bonusHit = DATA.sellers.filter(s=>s.bateu_bonificacao).length;
+  const qa = DATA.quinzena_atual || "q2";
+  const attention = DATA.sellers.filter(s=> {
+    const elig = qa === "q1" ? s.elegivel_q1 : s.elegivel_q2;
+    const stats = qa === "q1" ? s.q1 : s.q2;
+    return !elig && stats.vendas > 0;
+  });
+  const refutAttention = DATA.sellers.filter(s=> s.refuturiza_q2_ok === false);
+
+  const refutBody = DATA.refuturiza_total === 0 ? `
+    <div style="font-size:12px;color:#7C8B86">Ainda sem ativações registradas neste mês.</div>
+  ` : `
+    <div class="refut-grid">
+      ${[...DATA.sellers].sort((a,b)=>b.refuturiza-a.refuturiza).map(s=>`
+        <div class="refut-item">
+          <span class="refut-name">${esc(s.nome.split(" ")[0])}</span>
+          <span class="refut-count">${s.refuturiza}</span>
+        </div>`).join("")}
+      ${DATA.refuturiza_outros > 0 ? `
+        <div class="refut-item outros">
+          <span class="refut-name outros">Outros</span>
+          <span class="refut-count outros">${DATA.refuturiza_outros}</span>
+        </div>` : ""}
+    </div>
+    <div class="refut-min-section">
+      <div class="refut-min-title">Mínimo por quinzena: ${DATA.meta_refuturiza_quinzena} ativações/vendedor</div>
+      <div style="overflow-x:auto">
+        <table class="refut-table">
+          <thead>
+            <tr>
+              <th>VENDEDOR</th>
+              <th class="center">1ª QUINZENA</th>
+              <th class="center">2ª QUINZENA</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${DATA.sellers.map(s=>`
+              <tr>
+                <td style="font-weight:700">${esc(s.nome)}</td>
+                <td class="center">
+                  ${s.refuturiza_q1_ok === null
+                    ? `<span style="font-size:11px;color:#B0BBB7">${s.refuturiza_q1}</span>`
+                    : `<span class="refut-pill ${s.refuturiza_q1_ok ? 'ok' : 'no'}">${s.refuturiza_q1} ${s.refuturiza_q1_ok ? ICONS.check : ICONS.x}</span>`}
+                </td>
+                <td class="center">
+                  ${s.refuturiza_q2_ok === null
+                    ? `<span style="font-size:11px;color:#B0BBB7">${s.refuturiza_q2}</span>`
+                    : `<span class="refut-pill ${s.refuturiza_q2_ok ? 'ok' : 'no'}">${s.refuturiza_q2} ${s.refuturiza_q2_ok ? ICONS.check : ICONS.x}</span>`}
+                </td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    ${refutAttention.length > 0 ? `
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px">
+        ${refutAttention.map(s => `
+          <div class="alert-row">
+            <span>${esc(s.nome)}</span>
+            <span>${s.refuturiza_q2} de ${DATA.meta_refuturiza_quinzena} na 2ª quinzena</span>
+          </div>`).join("")}
+      </div>` : ""}
+  `;
+
+  const timBody = DATA.tim_total === 0 ? `
+    <div style="font-size:12px;color:#7C8B86">Ainda sem vendas TIM registradas neste mês. Assim que reportadas, aparecem aqui por vendedor.</div>
+  ` : `
+    <div class="refut-grid">
+      ${[...DATA.sellers].sort((a,b)=>b.tim-a.tim).map(s=>`
+        <div class="refut-item">
+          <span class="refut-name">${esc(s.nome.split(" ")[0])}</span>
+          <span class="refut-count">${s.tim}</span>
+        </div>`).join("")}
+    </div>
+  `;
+
+  el.innerHTML = `
+    <div class="kpi-row">
+      ${kpiHtml(ICONS.users,"Vendas do Time", teamTotal, `${DATA.sellers.length} vendedores ativos`, C.darkGreen)}
+      ${kpiHtml(ICONS.target,"Vendas da Unidade", DATA.unidade_total_vendas, `Meta: ${DATA.meta_unidade}`, C.medGreen)}
+      ${kpiHtml(ICONS.trendUp,"Projeção de Fechamento", DATA.unidade_projecao,
+        DATA.unidade_projecao >= DATA.meta_unidade ? "No ritmo da meta" : `Faltam ${DATA.meta_unidade - DATA.unidade_projecao} no ritmo atual`,
+        DATA.unidade_projecao >= DATA.meta_unidade ? C.medGreen : C.gold)}
+      ${kpiHtml(ICONS.trophy,"Bonificações Batidas", `${bonusHit}/${DATA.sellers.length}`, "100 vendas no mês", C.gold)}
+    </div>
+    ${DATA.vendas_faltantes > 0 ? `
+      <div class="ritmo-banner ritmo-${DATA.ritmo_status}">
+        ${ICONS.target}
+        <div class="ritmo-text">
+          <strong>Ritmo necessário para bater a meta de ${DATA.meta_unidade}:</strong> faltam ${DATA.vendas_faltantes} vendas em ${DATA.dias_uteis_restantes} dias úteis restantes, ou seja, ${DATA.ritmo_necessario} vendas/dia útil daqui até o fim do mês, o que dá em média ${DATA.ritmo_necessario_por_vendedor} vendas/dia por vendedor (${DATA.sellers.length} no time).
+          ${DATA.ritmo_status === "risco" ? `<span style="color:${C.red};font-weight:800">Ritmo da unidade até agora (${DATA.ritmo_atual}/dia) está bem abaixo do necessário, meta em risco.</span>` : ""}
+          ${DATA.ritmo_status === "atencao" ? `<span style="color:${C.gold};font-weight:800">Ritmo da unidade até agora (${DATA.ritmo_atual}/dia) está próximo do limite.</span>` : ""}
+          <div style="font-size:11px;color:#7C8B86;margin-top:4px">Ritmo da unidade (${DATA.ritmo_atual}/dia) inclui todos os canais, não só o time direto.</div>
+        </div>
+      </div>` : ""}
+    <div class="flex-row">
+      <div class="card gauge-card">
+        ${gaugeRingHtml(DATA.unidade_pct_meta)}
+        <div>
+          <div class="gauge-title">Progresso da meta mensal</div>
+          <div class="gauge-desc">
+            ${DATA.unidade_total_vendas} de ${DATA.meta_unidade} vendas realizadas.<br>
+            Ritmo atual: ${DATA.dias_uteis_ate_agora} de ${DATA.dias_uteis_mes} dias úteis corridos.<br>
+            Meta diária da unidade: ${DATA.meta_diaria} vendas/dia útil.
+          </div>
+        </div>
+      </div>
+      <div class="card alerts-card">
+        <div class="alerts-title"><span style="color:${C.red};display:inline-flex">${ICONS.alert}</span> Alertas da ${qa === "q1" ? "1ª" : "2ª"} quinzena</div>
+        ${attention.length === 0
+          ? `<div class="no-alert">Nenhum vendedor fora da elegibilidade no momento. 🎉</div>`
+          : attention.map(s=>`
+            <div class="alert-row">
+              <span>${esc(s.nome)}</span>
+              <span>APP ${(qa === "q1" ? s.q1 : s.q2).app_pct}% · PL ${(qa === "q1" ? s.q1 : s.q2).pl_pct}%</span>
+            </div>`).join("")}
+      </div>
+    </div>
+    ${DATA.mostrar_refuturiza_tim ? `
+    <div class="card refut-card">
+      <div class="refut-head">
+        <div class="refut-title">${ICONS.refresh} Refuturiza: Ativações</div>
+        <span class="refut-score" style="color:${DATA.refuturiza_total >= DATA.meta_refuturiza ? C.medGreen : '#7C8B86'}">
+          ${DATA.refuturiza_total} / ${DATA.meta_refuturiza} ${DATA.refuturiza_total >= DATA.meta_refuturiza ? "✓ meta batida" : ""}
+        </span>
+      </div>
+      <div class="refut-bar">
+        <div class="refut-bar-fill" style="width:${Math.min(DATA.refuturiza_pct,100)}%;background:${DATA.refuturiza_total >= DATA.meta_refuturiza ? C.medGreen : C.gold}"></div>
+      </div>
+      ${DATA.refuturiza_desatualizado ? `
+        <div style="display:flex;gap:8px;align-items:flex-start;background:#FBF6EA;border:1px solid ${C.gold}55;border-radius:10px;padding:8px 12px;margin-bottom:14px">
+          <span style="font-size:11.5px;color:#6B5A2A;font-weight:600">
+            Os dados acima constam somente da 1ª quinzena. A 2ª quinzena ainda não foi enviada.
+          </span>
+        </div>` : ""}
+      ${refutBody}
+    </div>
+    <div class="card refut-card">
+      <div class="refut-head">
+        <div>
+          <div class="refut-title" style="margin-bottom:3px">${ICONS.smartphone} TIM Controle</div>
+          <div style="font-size:11px;color:#7C8B86">Parceria nova: planos TIM Controle para clientes exclusivos CDT</div>
+        </div>
+        <span class="refut-score" style="color:${DATA.tim_total >= DATA.meta_tim ? C.medGreen : '#7C8B86'}">
+          ${DATA.tim_total} / ${DATA.meta_tim} ${DATA.tim_total >= DATA.meta_tim ? "✓ meta batida" : ""}
+        </span>
+      </div>
+      <div class="refut-bar">
+        <div class="refut-bar-fill" style="width:${Math.min(DATA.tim_pct,100)}%;background:${DATA.tim_total >= DATA.meta_tim ? C.medGreen : C.gold}"></div>
+      </div>
+      ${DATA.tim_desatualizado ? `
+        <div style="display:flex;gap:8px;align-items:flex-start;background:#FBF6EA;border:1px solid ${C.gold}55;border-radius:10px;padding:8px 12px;margin-bottom:14px">
+          <span style="font-size:11.5px;color:#6B5A2A;font-weight:600">
+            Os dados acima constam somente da 1ª quinzena. A 2ª quinzena ainda não foi enviada.
+          </span>
+        </div>` : ""}
+      ${timBody}
+    </div>
+    ` : ""}
+  `;
+}
+
+function renderVendedores(){
+  const el = document.getElementById("tab-vendedores");
+  const q = state.quinzena;
+  const eligibleCount = DATA.sellers.filter(s => q==="q1" ? s.elegivel_q1 : q==="q2" ? s.elegivel_q2 : true).length;
+  el.innerHTML = `
+    <div class="rules-panel">
+      <div class="rules-title">Como funciona a elegibilidade e a premiação hoje</div>
+      <div class="rules-grid">
+        <div>
+          <div class="rules-item-title">Elegibilidade por quinzena</div>
+          <div class="rules-item-desc">APP Baixado ≥ 75% e PL Ativa ≥ 50%. Os dois precisam bater a meta na mesma quinzena.</div>
+        </div>
+        <div>
+          <div class="rules-item-title">Premiação</div>
+          <div class="rules-item-desc">É paga de acordo com a porcentagem da Qualidade Cadastral (QYC) do vendedor na quinzena.</div>
+        </div>
+      </div>
+    </div>
+    <div class="quinzena-toggle">
+      <button data-q="q1" class="${q==='q1'?'active':''}">1ª Quinzena</button>
+      <button data-q="q2" class="${q==='q2'?'active':''}">2ª Quinzena</button>
+      <button data-q="mes" class="${q==='mes'?'active':''}">Mês completo</button>
+      <span class="quinzena-info">${eligibleCount}/${DATA.sellers.length} elegíveis ${q!=="mes" ? `na ${q==="q1"?"1ª":"2ª"} quinzena` : ""}</span>
+    </div>
+    <div class="seller-grid">
+      ${DATA.sellers.map(s=>sellerCardHtml(s,q)).join("")}
+    </div>
+  `;
+  el.querySelectorAll(".quinzena-toggle button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{ state.quinzena = btn.dataset.q; renderVendedores(); });
+  });
+}
+
+function bonusTrackHtml(s){
+  const progress = s.progresso_bonificacao_pct;
+  const hit = s.bateu_bonificacao;
+  return `
+  <div class="card bonus-track-card">
+    <div class="bonus-track-top">
+      <div class="bonus-track-left">
+        <div class="avatar small" style="background:${hit ? `linear-gradient(135deg, ${C.gold}, #E0B65A)` : `linear-gradient(135deg, ${C.darkGreen}, ${C.medGreen})`}">${initials(s.nome)}</div>
+        <div>
+          <div class="bonus-track-name">${esc(s.nome)}</div>
+          <div class="bonus-track-sub">${s.mes.vendas} / ${s.meta_bonificacao} vendas ${s.entrada ? "(meta proporcional)" : ""}</div>
+        </div>
+      </div>
+      ${hit
+        ? `<span class="bonus-pill">${ICONS.trophySm} R$ 1.000</span>`
+        : s.bateu_meta_vendas
+          ? `<span style="font-size:11.5px;font-weight:800;color:${C.red}">Não elegível</span>`
+          : `<span class="bonus-remaining">Faltam ${Math.max(s.meta_bonificacao - s.mes.vendas,0)}</span>`}
+    </div>
+    <div class="bonus-track-bar">
+      <div class="bonus-track-fill" style="width:${Math.min(progress,100)}%;background:${hit ? `linear-gradient(90deg, ${C.medGreen}, ${C.gold})` : `linear-gradient(90deg, ${C.darkGreen}, ${C.medGreen})`}"></div>
+      <span class="bonus-flag" style="color:${hit ? C.gold : '#B0BBB7'}">${ICONS.flag}</span>
+    </div>
+  </div>`;
+}
+
+function renderBonificacao(){
+  const el = document.getElementById("tab-bonificacao");
+  const ranked = [...DATA.sellers].sort((a,b)=>b.progresso_bonificacao_pct - a.progresso_bonificacao_pct);
+  el.innerHTML = `
+    <div class="card bonus-header">
+      <span style="color:${C.gold};display:inline-flex">${ICONS.trophy}</span>
+      <div>
+        <div class="bonus-header-title">Bonificação: R$ 1.000 para quem bater 100 vendas no mês</div>
+        <div class="bonus-header-sub">Lembrando: o vendedor precisa atingir o mínimo de APP e PL nas duas quinzenas do mês, além de ter gerado cashback. Sem isso, mesmo batendo 100 vendas, fica inelegível para essa premiação.</div>
+      </div>
+    </div>
+    <div>
+      ${ranked.map((s,i)=>`
+        <div class="bonus-item">
+          <div class="bonus-rank" style="color:${i<3 ? C.gold : '#B0BBB7'}">${i+1}º</div>
+          ${bonusTrackHtml(s)}
+        </div>`).join("")}
+    </div>
+  `;
+}
+
+function deltaTagHtml(curr, prev){
+  const diff = curr - prev;
+  if(prev===0 && curr===0) return `<span style="color:#B0BBB7;font-size:11px">—</span>`;
+  const up = diff>0, flat = diff===0;
+  const color = flat ? "#7C8B86" : up ? C.medGreen : C.red;
+  const icon = flat ? ICONS.minus : up ? ICONS.trendDown.replace('polyline points="23 18 13.5 8.5 8.5 13.5 1 6"','polyline points="1 6 8.5 13.5 13.5 8.5 23 18"').replace('polyline points="17 18 23 18 23 12"','polyline points="17 6 23 6 23 12"') : ICONS.trendDown;
+  return `<span class="delta" style="color:${color}">${icon} ${diff>0?"+":""}${diff}</span>`;
+}
+
+function renderComparativo(){
+  const el = document.getElementById("tab-comparativo");
+  const teamTotal = DATA.sellers.reduce((a,s)=>a+s.mes.vendas,0);
+  const totalQ1 = DATA.sellers.reduce((a,s)=>a+s.q1.vendas,0);
+  const totalQ2 = DATA.sellers.reduce((a,s)=>a+s.q2.vendas,0);
+  el.innerHTML = `
+    <div class="card table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>VENDEDOR</th>
+            <th class="center">VENDAS Q1</th>
+            <th class="center">VENDAS Q2</th>
+            <th class="center">Δ VENDAS</th>
+            <th class="center">APP Q1→Q2</th>
+            <th class="center">PL Q1→Q2</th>
+            <th class="center">QYC Q1→Q2</th>
+            <th class="center">TOTAL MÊS</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${DATA.sellers.map(s=>{
+            const noQ1 = !!s.entrada;
+            return `<tr>
+              <td style="font-weight:800">${esc(s.nome)}</td>
+              <td class="center" style="color:${noQ1?'#B0BBB7':'#173A31'}">${noQ1?"—":s.q1.vendas}</td>
+              <td class="center">${s.q2.vendas}</td>
+              <td class="center">${noQ1 ? `<span style="color:#B0BBB7;font-size:11px">novo(a)</span>` : deltaTagHtml(s.q2.vendas, s.q1.vendas)}</td>
+              <td class="center" style="color:#4B5D58;font-size:12px">${noQ1?"—":s.q1.app_pct+"%"} ${ICONS.arrow} ${s.q2.app_pct}%</td>
+              <td class="center" style="color:#4B5D58;font-size:12px">${noQ1?"—":s.q1.pl_pct+"%"} ${ICONS.arrow} ${s.q2.pl_pct}%</td>
+              <td class="center" style="color:#4B5D58;font-size:12px">${noQ1?"—":s.q1.qyc_pct+"%"} ${ICONS.arrow} ${s.q2.qyc_pct}%</td>
+              <td class="center" style="font-size:13px;font-weight:900;color:${C.darkGreen}">${s.mes.vendas}</td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td style="font-weight:900">TOTAL TIME</td>
+            <td class="center" style="font-weight:900">${totalQ1}</td>
+            <td class="center" style="font-weight:900">${totalQ2}</td>
+            <td colspan="4"></td>
+            <td class="center" style="font-size:14px;font-weight:900;color:${C.darkGreen}">${teamTotal}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  `;
+}
+
+function pendingRowHtml(c){
+  const prioColor = c.prioridade===1 ? C.red : C.gold;
+  const prioBg = c.prioridade===1 ? "#FBEAE8" : "#FBF6EA";
+  const dot = c.prioridade===1 ? "🔴" : c.pendente==="APP" ? "🟡" : "🟨";
+  return `
+  <div class="pending-row" style="background:${prioBg}">
+    <div class="pending-name"><span>${dot}</span> ${esc(c.nome)}</div>
+    <div class="pending-cell">${ICONS.cal} ${c.data}</div>
+    <div class="pending-cell">${ICONS.phone} ${c.telefone || "—"}</div>
+    <div class="pending-type" style="color:${prioColor}">${c.pendente}</div>
+    <div class="pending-qyc">QYC ${c.qyc_pct}%</div>
+  </div>`;
+}
+
+function renderPendente(){
+  const el = document.getElementById("tab-pendente");
+  const q = state.quinzenaPend;
+  el.innerHTML = `
+    <div class="quinzena-toggle">
+      <button data-q="q1" class="${q==='q1'?'active':''}">1ª Quinzena</button>
+      <button data-q="q2" class="${q==='q2'?'active':''}">2ª Quinzena (atual)</button>
+    </div>
+    <div class="pending-note">${ICONS.phoneCall} Clientes com APP e/ou PL pendente, priorize 🔴 (ambos) antes de 🟡 (APP) e 🟨 (PL)</div>
+    <div id="pendente-list"></div>
+  `;
+  el.querySelectorAll(".quinzena-toggle button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{ state.quinzenaPend = btn.dataset.q; renderPendente(); });
+  });
+
+  const list = document.getElementById("pendente-list");
+  list.innerHTML = DATA.sellers.map(s=>{
+    const items = q === "q1" ? s.pendentes_q1 : s.pendentes_q2;
+    const sorted = [...items].sort((a,b)=>a.prioridade-b.prioridade);
+    const countRed = items.filter(c=>c.prioridade===1).length;
+    const countYellow = items.length - countRed;
+    const uid = "acc-"+s.id.replace(/[^A-Z]/gi,"");
+    return `
+    <div class="card accordion">
+      <button class="accordion-head" data-target="${uid}">
+        <div class="accordion-left">
+          <div class="avatar xsmall">${initials(s.nome)}</div>
+          <span class="accordion-name">${esc(s.nome)}</span>
+        </div>
+        <div class="accordion-right">
+          ${countRed>0 ? `<span class="count-pill red">🔴 ${countRed}</span>` : ""}
+          ${countYellow>0 ? `<span class="count-pill yellow">🟡 ${countYellow}</span>` : ""}
+          ${items.length===0 ? `<span class="all-clear">Tudo em dia</span>` : ""}
+          <span class="chevron" id="chev-${uid}">${ICONS.chevron}</span>
+        </div>
+      </button>
+      <div class="accordion-body" id="${uid}">
+        ${items.length>0 ? `
+          <div class="pending-grid-head"><span>Cliente</span><span>Data</span><span>Telefone</span><span>Pendente</span><span>QYC</span></div>
+          ${sorted.map(pendingRowHtml).join("")}
+        ` : ""}
+      </div>
+    </div>`;
+  }).join("");
+
+  list.querySelectorAll(".accordion-head").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const target = document.getElementById(btn.dataset.target);
+      const chev = document.getElementById("chev-"+btn.dataset.target);
+      target.classList.toggle("open");
+      chev.classList.toggle("open");
+    });
+  });
+}
+
+function renderAll(){
+  renderNav();
+  document.getElementById("tab-geral").style.display = state.tab==="geral" ? "block" : "none";
+  document.getElementById("tab-vendedores").style.display = state.tab==="vendedores" ? "block" : "none";
+  document.getElementById("tab-bonificacao").style.display = state.tab==="bonificacao" ? "block" : "none";
+  document.getElementById("tab-comparativo").style.display = state.tab==="comparativo" ? "block" : "none";
+  document.getElementById("tab-pendente").style.display = state.tab==="pendente" ? "block" : "none";
+
+  if(state.tab==="geral") renderGeral();
+  if(state.tab==="vendedores") renderVendedores();
+  if(state.tab==="bonificacao") renderBonificacao();
+  if(state.tab==="comparativo") renderComparativo();
+  if(state.tab==="pendente") renderPendente();
+}
+
+document.getElementById("lastDate").textContent = DATA.ultima_data_dados;
+document.getElementById("mesRef").textContent = DATA.mes_ref;
+document.getElementById("pageTitle").textContent = "Dashboard CDT Campo Grande - " + DATA.mes_ref;
+document.getElementById("metaUnidade").textContent = DATA.meta_unidade;
+bindNav();
+renderAll();
+</script>
+</body>
+</html>
